@@ -127,70 +127,132 @@
   .hero-proof span { display: inline-flex; align-items: center; gap: 8px; }
   .tick { width: 18px; height: 18px; flex: none; color: var(--green); }
 
-  /* ---------- Demo ---------- */
-  .demo {
-    position: relative;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 22px;
-    box-shadow: 0 40px 80px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.02) inset;
+  /* ---------- Demo: phone ---------- */
+  .demo { position: relative; display: grid; justify-items: center; }
+  .demo::before {  /* soft glow behind the phone */
+    content: ""; position: absolute; inset: 8% 4% 14%; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(31,122,232,.28), rgba(47,191,63,.10) 60%, transparent);
+    filter: blur(30px); z-index: 0;
   }
-  .demo-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .demo-label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
-  .timer {
-    font-variant-numeric: tabular-nums; font-weight: 700; font-size: 14px;
-    color: var(--green-soft); background: rgba(47,191,63,.12);
-    padding: 4px 10px; border-radius: 99px;
+  .phone {
+    position: relative; z-index: 1; width: 318px; padding: 11px; border-radius: 54px;
+    background: linear-gradient(145deg, #2b3036, #0d0f11 55%, #22262b);
+    box-shadow: 0 0 0 1.5px #4a5159, 0 0 0 3px #15181b, 0 50px 90px -30px rgba(0,0,0,.85);
   }
-  .transcript {
-    display: flex; gap: 12px; align-items: flex-start;
-    background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; min-height: 96px;
-    font-size: 16px; color: var(--text);
+  .phone::before, .phone::after {  /* side buttons */
+    content: ""; position: absolute; width: 3px; border-radius: 2px; background: #3a4047;
   }
-  .mic {
-    flex: none; width: 34px; height: 34px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--blue); color: #fff; position: relative;
+  .phone::before { left: -4px; top: 118px; height: 58px; box-shadow: 0 -40px 0 -1px #3a4047; }
+  .phone::after { right: -4px; top: 150px; height: 82px; }
+  .screen {
+    position: relative; overflow: hidden; border-radius: 44px; aspect-ratio: 9 / 19;
+    background: #f2f3f5; color: #1a1d20; display: flex; flex-direction: column;
+    font-size: 13px; line-height: 1.4;
   }
-  .mic svg { width: 16px; height: 16px; }
-  .mic.live::after {
-    content: ""; position: absolute; inset: -5px; border-radius: 50%;
-    border: 2px solid var(--blue); opacity: .6;
-    animation: pulse 1.4s ease-out infinite;
+  .status { position: relative; flex: none; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 30px; font-weight: 700; font-size: 14px; }
+  .island { position: absolute; left: 50%; top: 11px; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; }
+  .st-icons { display: flex; gap: 5px; align-items: center; }
+  .st-icons svg { height: 11px; width: auto; }
+  .app-bar { flex: none; display: flex; align-items: center; gap: 8px; padding: 6px 18px 10px; border-bottom: 1px solid #e1e4e8; background: #fff; }
+  .app-bar svg { width: 22px; height: 22px; }
+  .app-bar b { font-size: 15px; }
+  .app-bar span { margin-left: auto; font-size: 12px; color: #6b747d; }
+  .view { position: relative; flex: 1; overflow: hidden; }
+  .scr { padding: 14px 14px 30px; transition: transform .7s cubic-bezier(.3,.7,.2,1); }
+  .scr-label { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6b747d; margin: 0 0 6px 2px; }
+  .note {
+    background: #fff; border: 2px solid var(--blue); border-radius: 14px; padding: 10px 12px; min-height: 112px;
+    font-size: 14px; color: #1a1d20; box-shadow: 0 0 0 4px rgba(31,122,232,.12);
+    transition: border-color .3s, box-shadow .3s;
   }
-  @keyframes pulse { from { transform: scale(.85); opacity: .7; } to { transform: scale(1.35); opacity: 0; } }
-  .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--blue-soft); vertical-align: -3px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-
+  .note.done { border-color: #d9dde1; box-shadow: none; }
+  .gen {
+    margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    height: 42px; border-radius: 12px; background: var(--green); color: #07210b; font-weight: 800; font-size: 14px;
+    transition: transform .15s ease, filter .15s ease;
+  }
+  .gen.press { transform: scale(.95); filter: brightness(.9); }
+  .spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(7,33,11,.3); border-top-color: #07210b; animation: spin .7s linear infinite; display: none; }
+  .gen.busy .spin { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .estimate {
-    margin-top: 16px;
-    background: var(--paper); color: var(--ink);
-    border-radius: 12px; padding: 18px 18px 14px;
-    font-size: 14.5px;
+    margin-top: 14px; background: #fff; border-radius: 14px; padding: 14px 14px 10px;
+    box-shadow: 0 1px 0 #e1e4e8, 0 10px 24px -14px rgba(0,0,0,.25);
+    font-size: 12.5px; opacity: 0; transform: translateY(16px); transition: opacity .4s ease, transform .4s ease;
   }
-  .est-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 6px; }
-  .est-head b { font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .est-head span { font-size: 12.5px; color: #5d6670; }
+  .estimate.show { opacity: 1; transform: none; }
+  .est-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 4px; }
+  .est-head b { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .est-head span { font-size: 11.5px; color: #5d6670; }
   .est-row {
-    display: flex; justify-content: space-between; gap: 12px;
-    padding: 7px 0; border-bottom: 1px dashed #d9dde1;
+    display: flex; justify-content: space-between; gap: 10px;
+    padding: 6px 0; border-bottom: 1px dashed #d9dde1;
     opacity: 0; transform: translateY(6px);
     transition: opacity .35s ease, transform .35s ease;
   }
   .est-row.show { opacity: 1; transform: none; }
-  .est-row .desc small { display: block; color: #6b747d; font-size: 12.5px; }
-  .est-row .amt { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
-  .fee-tag { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #146b1f; background: #dff5e2; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; }
+  .est-row .desc { font-weight: 600; }
+  .est-row .desc small { display: block; font-weight: 400; color: #6b747d; font-size: 11px; }
+  .est-row .amt { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+  .fee-tag { display: inline-block; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #146b1f; background: #dff5e2; padding: 1px 5px; border-radius: 4px; margin-left: 5px; vertical-align: 1px; }
   .est-total {
-    display: flex; justify-content: space-between; padding-top: 10px; font-weight: 800; font-size: 18px;
+    display: flex; justify-content: space-between; padding-top: 8px; font-weight: 800; font-size: 16px;
     opacity: 0; transition: opacity .4s ease;
   }
   .est-total.show { opacity: 1; }
   .est-total .amt { color: var(--blue); font-variant-numeric: tabular-nums; }
-  .demo-foot { margin-top: 12px; font-size: 12.5px; color: var(--faint); text-align: center; }
+
+  /* iOS-style keyboard with dictation on */
+  .kb {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    background: #d1d4da; padding: 6px 3px 30px; transition: transform .5s cubic-bezier(.3,.7,.2,1);
+  }
+  .kb.down { transform: translateY(105%); }
+  .wave { display: flex; align-items: center; justify-content: center; gap: 3px; height: 30px; }
+  .wave i { width: 3px; height: 4px; border-radius: 2px; background: var(--blue); }
+  .kb.live .wave i { animation: wave .9s ease-in-out infinite; }
+  @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 22px; } }
+  .kb-row { display: flex; justify-content: center; gap: 5px; margin-top: 8px; padding: 0 2px; }
+  .k {
+    flex: 0 0 25px; height: 36px; border-radius: 6px; background: #fff; box-shadow: 0 1px 0 #8b9098;
+    display: grid; place-items: center; font-size: 15px; color: #1a1d20;
+  }
+  .k.gray { flex-basis: 36px; background: #abb0ba; font-size: 12px; }
+  .k.space { flex: 1 1 auto; font-size: 12px; color: #4a5056; }
+  .k.ret { flex-basis: 74px; background: #abb0ba; font-size: 12px; }
+  .kb-row.r4 { padding: 0 3px; }
+  .kb-foot { display: flex; justify-content: space-between; align-items: center; padding: 10px 18px 0; color: #4a5056; }
+  .kb-foot svg { width: 22px; height: 22px; }
+  .mic {
+    width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+    color: #4a5056; position: relative; transition: background .2s, color .2s;
+  }
+  .kb.live .mic { background: var(--blue); color: #fff; }
+  .mic svg { width: 18px; height: 18px; }
+  .kb.live .mic::after {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    border: 2px solid var(--blue); animation: pulse 1.4s ease-out infinite;
+  }
+  @keyframes pulse { from { transform: scale(.85); opacity: .7; } to { transform: scale(1.35); opacity: 0; } }
+  .home-bar { position: absolute; left: 50%; bottom: 8px; z-index: 3; width: 120px; height: 5px; margin-left: -60px; border-radius: 3px; background: #1a1d20; }
+  .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--blue); vertical-align: -3px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .timer-chip {
+    position: relative; z-index: 1; margin-top: 22px;
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 99px;
+    background: var(--surface); border: 1px solid var(--line); box-shadow: 0 14px 30px -12px rgba(0,0,0,.7);
+    font-size: 13px; color: var(--muted); font-weight: 600;
+  }
+  .timer-chip b { color: var(--green-soft); font-variant-numeric: tabular-nums; font-size: 15px; }
+  .timer-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .demo-foot { position: relative; z-index: 1; margin-top: 10px; font-size: 12.5px; color: var(--faint); text-align: center; }
   .replay { background: none; border: 0; color: var(--blue-soft); font: inherit; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 560px) {
+    .phone { width: 292px; border-radius: 50px; padding: 10px; }
+    .screen { border-radius: 41px; }
+    .k { flex-basis: 22px; height: 33px; font-size: 14px; }
+  }
 
   /* ---------- Trades ---------- */
   .trades-section { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -543,14 +605,14 @@
     .messy { grid-template-columns: 1fr; }
     .arrow { justify-self: center; transform: rotate(90deg); }
     .own { padding: 30px 22px; border-radius: 18px; }
-    .demo { padding: 16px; }
     .final { padding: 84px 0; }
     .hero-ctas .btn { flex: 1 1 auto; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .reveal, .est-row, .est-total { transition: none; opacity: 1; transform: none; }
-    .mic.live::after, .caret { animation: none; }
+    .kb.live .mic::after, .caret, .kb.live .wave i, .spin { animation: none; }
+    .scr, .kb, .estimate { transition: none; }
     .btn:hover { transform: none; }
   }
 </style>
@@ -596,20 +658,45 @@
         </div>
       </div>
 
-      <div class="demo" aria-label="Example: a spoken job description becoming a priced estimate">
-        <div class="demo-top">
-          <span class="demo-label">Your phone's dictation</span>
-          <span class="timer" id="timer">0:00</span>
+      <div class="demo" aria-label="Example: a contractor dictates a job on their phone and it becomes a priced estimate">
+        <div class="phone" aria-hidden="true">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span><span class="island"></span>
+              <span class="st-icons">
+                <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                <svg viewBox="0 0 16 12"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.3-1.4A10.4 10.4 0 0 0 8 .5C5.2.5 2.6 1.6.7 3.5L2 4.9a8.3 8.3 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.3-1.4A6.8 6.8 0 0 0 8 4.1C6.2 4.1 4.6 4.8 3.3 6l1.3 1.4c.9-.8 2.1-1.3 3.4-1.3zM8 9.6c.4 0 .8.2 1.1.4L8 11.5 6.9 10c.3-.2.7-.4 1.1-.4z"/></svg>
+                <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="1.8"/><rect x="24" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+              </span>
+            </div>
+            <div class="app-bar"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 12h28a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8H24l-9 7v-7h-1a8 8 0 0 1-8-8V20a8 8 0 0 1 8-8z" fill="none" stroke="#7fa6d6" stroke-width="4" stroke-linejoin="round"/><path d="M15 31l9 9L52 8" fill="none" stroke="#2fbf3f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Voice to Quote</b><span>New quote</span></div>
+            <div class="view">
+              <div class="scr" id="scr">
+                <p class="scr-label">Describe the job</p>
+                <div class="note" id="note"><span id="typed"></span><span class="caret" id="caret"></span></div>
+                <div class="gen" id="gen"><span class="spin"></span><span id="gen-label">Generate Quote</span></div>
+                <div class="estimate" id="est">
+                  <div class="est-head"><b>Estimate</b><span>Henderson Residence</span></div>
+                  <div id="rows"></div>
+                  <div class="est-total" id="total"><span>Total</span><span class="amt">$5,999</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="kb" id="kb">
+              <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="kb-row"><span class="k">q</span><span class="k">w</span><span class="k">e</span><span class="k">r</span><span class="k">t</span><span class="k">y</span><span class="k">u</span><span class="k">i</span><span class="k">o</span><span class="k">p</span></div>
+              <div class="kb-row"><span class="k">a</span><span class="k">s</span><span class="k">d</span><span class="k">f</span><span class="k">g</span><span class="k">h</span><span class="k">j</span><span class="k">k</span><span class="k">l</span></div>
+              <div class="kb-row"><span class="k gray">&#8679;</span><span class="k">z</span><span class="k">x</span><span class="k">c</span><span class="k">v</span><span class="k">b</span><span class="k">n</span><span class="k">m</span><span class="k gray">&#9003;</span></div>
+              <div class="kb-row r4"><span class="k gray">123</span><span class="k space">space</span><span class="k ret">return</span></div>
+              <div class="kb-foot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+                <div class="mic" id="mic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg></div>
+              </div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
         </div>
-        <div class="transcript">
-          <div class="mic" id="mic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg></div>
-          <div><span id="typed"></span><span class="caret" id="caret"></span></div>
-        </div>
-        <div class="estimate">
-          <div class="est-head"><b>Estimate</b><span>Henderson Residence</span></div>
-          <div id="rows"></div>
-          <div class="est-total" id="total"><span>Total</span><span class="amt">$5,999</span></div>
-        </div>
+        <span class="timer-chip"><span class="dot"></span>Talk to quote <b id="timer">0:00</b></span>
         <p class="demo-foot">Example pricing — yours comes from your own rates. <button class="replay" id="replay" type="button">Replay</button></p>
       </div>
     </div>
@@ -1438,12 +1525,23 @@ var GetStarted = (function () {
   ];
   var typed = document.getElementById("typed");
   var caret = document.getElementById("caret");
-  var mic = document.getElementById("mic");
+  var kb = document.getElementById("kb");
+  var note = document.getElementById("note");
+  var gen = document.getElementById("gen");
+  var genLabel = document.getElementById("gen-label");
+  var scr = document.getElementById("scr");
+  var est = document.getElementById("est");
   var rows = document.getElementById("rows");
   var total = document.getElementById("total");
   var timer = document.getElementById("timer");
   var timers = [];
   var clock = null;
+
+  // Give each waveform bar its own rhythm
+  document.querySelectorAll(".wave i").forEach(function (b, n) {
+    b.style.animationDelay = (-(n * 137) % 900) + "ms";
+    b.style.animationDuration = (700 + (n * 53) % 500) + "ms";
+  });
 
   function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
@@ -1466,16 +1564,38 @@ var GetStarted = (function () {
     }, 185);
   }
 
+  // Slide the screen up so the finished estimate is in view
+  function scrollToEstimate() {
+    var view = scr.parentNode;
+    var shift = Math.max(0, Math.min(est.offsetTop - 14, scr.scrollHeight - view.clientHeight));
+    scr.style.transform = "translateY(" + -shift + "px)";
+  }
+
+  function showResult() {
+    kb.classList.remove("live");
+    kb.classList.add("down");
+    note.classList.add("done");
+    caret.style.display = "none";
+    gen.classList.remove("press", "busy");
+    genLabel.textContent = "Generate Quote";
+    est.classList.add("show");
+    scrollToEstimate();
+  }
+
   function run() {
     timers.forEach(clearTimeout); timers = [];
     clearInterval(clock);
     buildRows();
     total.classList.remove("show");
+    est.classList.remove("show");
+    note.classList.remove("done");
+    kb.classList.remove("down");
+    scr.style.transform = "";
     timer.textContent = "0:00";
 
     if (reduce) {
       typed.textContent = transcript;
-      caret.style.display = "none";
+      showResult();
       rows.querySelectorAll(".est-row").forEach(function (r) { r.classList.add("show"); });
       total.classList.add("show");
       timer.textContent = "0:42";
@@ -1484,7 +1604,7 @@ var GetStarted = (function () {
 
     typed.textContent = "";
     caret.style.display = "";
-    mic.classList.add("live");
+    kb.classList.add("live");
     startClock();
 
     var i = 0;
@@ -1492,13 +1612,23 @@ var GetStarted = (function () {
       if (i <= transcript.length) {
         typed.textContent = transcript.slice(0, i++);
         later(type, 22 + Math.random() * 22);
-      } else {
-        mic.classList.remove("live");
-        caret.style.display = "none";
-        var rowEls = rows.querySelectorAll(".est-row");
-        rowEls.forEach(function (r, n) { later(function () { r.classList.add("show"); }, 350 + n * 260); });
-        later(function () { total.classList.add("show"); }, 350 + rowEls.length * 260 + 150);
+        return;
       }
+      // Done talking: mic off, keyboard away, tap Generate Quote
+      kb.classList.remove("live");
+      caret.style.display = "none";
+      note.classList.add("done");
+      later(function () { kb.classList.add("down"); }, 250);
+      later(function () { gen.classList.add("press"); }, 750);
+      later(function () { gen.classList.remove("press"); gen.classList.add("busy"); genLabel.textContent = "Building your quote…"; }, 900);
+      later(function () {
+        gen.classList.remove("busy"); genLabel.textContent = "Generate Quote";
+        est.classList.add("show");
+        scrollToEstimate();
+        var rowEls = rows.querySelectorAll(".est-row");
+        rowEls.forEach(function (r, n) { later(function () { r.classList.add("show"); }, 450 + n * 260); });
+        later(function () { total.classList.add("show"); }, 450 + rowEls.length * 260 + 150);
+      }, 1900);
     })();
   }
 
