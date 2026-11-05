@@ -453,6 +453,29 @@
   .fm .signup .btn { width: 100%; }
   .fm .signup-msg { text-align: center; }
 
+  /* Get-started form pop-up (reuses the .fm pop-up shell) */
+  .gs { max-width: 540px; text-align: left; max-height: calc(100vh - 32px); overflow-y: auto; border-color: var(--blue); box-shadow: 0 40px 90px -20px rgba(0,0,0,.8), 0 0 60px -20px rgba(31,122,232,.45); }
+  .gs h2 { margin-top: 0; padding-right: 30px; }
+  .gs > p { margin: 6px 0 20px; }
+  .lead { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; }
+  .lead label { display: grid; gap: 6px; font-size: 14px; font-weight: 700; color: var(--text); }
+  .lead label i { font-style: normal; font-weight: 500; color: var(--faint); }
+  .lead .full { grid-column: 1 / -1; }
+  .lead input, .lead select, .lead textarea {
+    width: 100%; min-width: 0; font: inherit; font-size: 16px; font-weight: 400; color: var(--text);
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px;
+  }
+  .lead textarea { resize: vertical; min-height: 88px; }
+  .lead input::placeholder, .lead textarea::placeholder { color: var(--faint); }
+  .lead input:focus-visible, .lead select:focus-visible, .lead textarea:focus-visible { outline: 3px solid var(--blue-soft); outline-offset: 1px; border-color: transparent; }
+  .lead .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .lead .btn { grid-column: 1 / -1; width: 100%; margin-top: 4px; }
+  .gs .signup-msg { text-align: center; }
+  .gs .signup-msg:empty { display: none; }
+  .gs .gs-alt { text-align: center; font-size: 13.5px; color: var(--faint); margin: 14px 0 0; }
+  .gs .gs-alt a { color: var(--muted); }
+  @media (max-width: 560px) { .lead { grid-template-columns: 1fr; } .gs { padding: 30px 18px 22px; } }
+
   /* Reopen tab for the founding offer */
   .fm-pill {
     position: fixed; z-index: 90; left: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -911,7 +934,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
             <span><b>Quoting-in-30-days guarantee.</b> If you're not sending real quotes with it within 30 days, we keep working with you for free until you are.</span>
           </div>
-          <a class="btn btn-primary" href="mailto:hello@yourquoteagent.com?subject=Book%20my%20YourQuoteAgent%20Growth%20package" data-cta>Get the Growth package</a>
+          <a class="btn btn-primary" href="mailto:hello@yourquoteagent.com?subject=Book%20my%20YourQuoteAgent%20Growth%20package" data-cta data-start="Growth package">Get the Growth package</a>
         </div>
 
         <div class="plan reveal">
@@ -926,7 +949,7 @@
             <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Your logo, brand color, business info, payment terms and pay link on every estimate and invoice</span></li>
             <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Walkthrough of voice-to-quote on your own phone</span></li>
           </ul>
-          <a class="btn btn-ghost" href="mailto:hello@yourquoteagent.com?subject=Book%20my%20YourQuoteAgent%20setup" data-cta>Book my setup</a>
+          <a class="btn btn-ghost" href="mailto:hello@yourquoteagent.com?subject=Book%20my%20YourQuoteAgent%20setup" data-cta data-start="Done-for-you setup">Book my setup</a>
         </div>
       </div>
       <p class="plan-fine reveal">Requires your own paid subscription with a major AI provider, billed directly by them, not us. We'll tell you exactly which plan you need before you book, and we never resell it or mark it up.</p>
@@ -1085,7 +1108,7 @@
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="mailto:hello@yourquoteagent.com">Contact</a>
+      <a href="mailto:hello@yourquoteagent.com" data-cta>Contact</a>
     </nav>
     <span>&copy; <span id="year">2026</span> YourQuoteAgent</span>
   </div>
@@ -1111,6 +1134,42 @@
     <button class="fm-no" type="button" data-fm-close>No thanks, I'll pay full price</button>
   </div>
 </div>
+<!-- ============ GET STARTED FORM (every Get started / Book / Contact button opens this) ============ -->
+<div class="fm-backdrop" id="gs" hidden>
+  <div class="fm gs" role="dialog" aria-modal="true" aria-labelledby="gs-title">
+    <button class="fm-close" type="button" aria-label="Close" data-gs-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2 id="gs-title">Let's get you set up</h2>
+    <p>Tell us a little about your business and we'll email you back to answer questions and book your setup call.</p>
+    <form class="lead" name="lead" method="POST" data-source="get-started" data-success="Got it, thanks! We'll email you shortly to set up a time." novalidate>
+      <label class="hp">Company <input name="company" tabindex="-1" autocomplete="off"></label>
+      <label>Your name <input type="text" name="name" id="gs-name" autocomplete="name" required data-label="your name"></label>
+      <label><span>Business name <i>(optional)</i></span><input type="text" name="business" autocomplete="organization"></label>
+      <label>Email <input type="email" name="email" autocomplete="email" required placeholder="you@yourbusiness.com"></label>
+      <label><span>Phone <i>(optional)</i></span><input type="tel" name="phone" autocomplete="tel"></label>
+      <label>Your trade
+        <select name="trade">
+          <option>Painting</option>
+          <option>Fencing (coming soon)</option>
+          <option>Flooring (coming soon)</option>
+          <option>Drywall (coming soon)</option>
+          <option>Other trade</option>
+        </select>
+      </label>
+      <label>Interested in
+        <select name="package" id="gs-package">
+          <option>Not sure yet</option>
+          <option>Growth package</option>
+          <option>Done-for-you setup</option>
+        </select>
+      </label>
+      <label class="full"><span>Anything we should know? <i>(optional)</i></span><textarea name="message" rows="3" placeholder="Questions, how many quotes you send a week, best time to reach you…"></textarea></label>
+      <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+    <p class="signup-msg" role="status"></p>
+    <p class="gs-alt">Prefer email? <a href="mailto:hello@yourquoteagent.com">hello@yourquoteagent.com</a></p>
+  </div>
+</div>
+
 <button class="fm-pill" id="fm-pill" type="button" hidden>Founding price: Growth <span id="fm-pill-price">$1,497</span> <s id="fm-pill-regular">$3,497</s></button>
 
 <script>
@@ -1124,11 +1183,11 @@ var FOUNDING = {
   delayMs: 8000          // shows after this delay, or when the visitor reaches Pricing, whichever comes first
 };
 
-// Where email sign-ups go. Pick one:
-//   "https://formspree.io/f/XXXXXXX"   a Formspree form URL (works on any host, including Vercel; emails you each sign-up)
-//   "netlify"                          only if the site is hosted on Netlify (does NOT work on Vercel)
-//   ""                                 not connected yet
-var SIGNUP = { endpoint: "" };
+// Where every form on the page goes (Get started, Notify me, Keep me posted, founding price).
+// Web3Forms (free) emails each submission to the address the access key was created for
+// (hello@yourquoteagent.com). Get a key at https://web3forms.com, paste it below, then push to GitHub.
+// Leave accessKey empty and the forms say "not connected yet" instead of sending.
+var SIGNUP = { endpoint: "https://api.web3forms.com/submit", accessKey: "3385a591-56f8-43d4-b099-937e4681d808" };
 
 // ---------- Email sign-up forms ----------
 var Signup = (function () {
@@ -1137,10 +1196,35 @@ var Signup = (function () {
     var data = new FormData(form);
     data.append("source", form.getAttribute("data-source") || "");
     ["utm_source", "utm_medium", "utm_campaign"].forEach(function (k) { if (params.get(k)) data.append(k, params.get(k)); });
-    if (SIGNUP.endpoint === "netlify") {
-      return fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(data).toString() });
+    data.delete("company");   // spam trap, always empty here
+    data.delete("form-name");
+    if (SIGNUP.accessKey) {
+      data.append("access_key", SIGNUP.accessKey);
+      data.append("subject", subjectFor(form, data));
+      data.append("from_name", "YourQuoteAgent website");
+      if (data.get("email")) data.append("replyto", data.get("email"));
     }
-    return fetch(SIGNUP.endpoint, { method: "POST", headers: { Accept: "application/json" }, body: data });
+    return fetch(SIGNUP.endpoint, { method: "POST", headers: { Accept: "application/json" }, body: data })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          if (!r.ok || j.success === false) throw new Error(j.message || r.status);
+          return r;
+        });
+      });
+  }
+  // Subject line of the email you get, so you can tell leads from list sign-ups at a glance.
+  function subjectFor(form, data) {
+    var source = form.getAttribute("data-source") || "";
+    if (source === "get-started") {
+      var who = data.get("name") + (data.get("business") ? " (" + data.get("business") + ")" : "");
+      return "New lead: " + data.get("package") + " - " + who;
+    }
+    if (source === "founding-popup") return "Founding price claim: " + data.get("email");
+    if (source.indexOf("trade-") === 0) return "Trade waitlist: " + (data.get("trade") || source.slice(6));
+    return "Email list sign-up: " + data.get("email");
+  }
+  function connected() {
+    return !!SIGNUP.endpoint && (!!SIGNUP.accessKey || SIGNUP.endpoint.indexOf("web3forms") < 0);
   }
   function wire(form, onSuccess) {
     var msg = form.nextElementSibling;
@@ -1154,12 +1238,17 @@ var Signup = (function () {
         msg.textContent = "Tell us your trade, like roofing or concrete.";
         msg.classList.add("err"); tradeBox.focus(); return;
       }
+      var missing = Array.prototype.filter.call(form.querySelectorAll("[required][data-label]"), function (el) { return !el.value.trim(); })[0];
+      if (missing) {
+        msg.textContent = "Please add " + missing.getAttribute("data-label") + ".";
+        msg.classList.add("err"); missing.focus(); return;
+      }
       if (!email.value || !email.checkValidity()) {
         msg.textContent = "Enter a valid email address, like you@yourbusiness.com.";
         msg.classList.add("err"); email.focus(); return;
       }
       if (form.querySelector('[name="company"]').value) return; // spam bot filled the hidden field
-      if (!SIGNUP.endpoint) {
+      if (!connected()) {
         msg.textContent = "Sign-up isn't connected yet. Email hello@yourquoteagent.com instead.";
         msg.classList.add("err"); return;
       }
@@ -1185,6 +1274,58 @@ var Signup = (function () {
 })();
 
 document.querySelectorAll('form.signup:not([data-source="founding-popup"])').forEach(function (f) { Signup.wire(f); });
+
+// ---------- Get started form pop-up ----------
+// Buttons marked data-cta open the form instead of the visitor's email app.
+// data-start="Growth package" etc. pre-picks the package. Links to #get-started open it on load.
+var GetStarted = (function () {
+  var gs = document.getElementById("gs");
+  var form = gs.querySelector("form");
+  var pkg = document.getElementById("gs-package");
+  var isOpen = false, lastFocus = null;
+
+  function open(choice) {
+    if (choice) pkg.value = choice;
+    if (isOpen) return;
+    isOpen = true;
+    lastFocus = document.activeElement;
+    gs.hidden = false;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(function () { gs.classList.add("open"); });
+    (form.hidden ? gs.querySelector(".fm-close") : document.getElementById("gs-name")).focus();
+    document.addEventListener("keydown", onKey);
+  }
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    gs.classList.remove("open");
+    setTimeout(function () { gs.hidden = true; }, 250);
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", onKey);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onKey(e) {
+    if (e.key === "Escape") return close();
+    if (e.key === "Tab") {
+      var f = Array.prototype.filter.call(gs.querySelectorAll("a, button, input, select, textarea"), function (el) { return el.offsetParent !== null && el.tabIndex !== -1; });
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  document.querySelectorAll("[data-cta]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      open(a.getAttribute("data-start") || "Not sure yet");
+    });
+  });
+  gs.querySelectorAll("[data-gs-close]").forEach(function (b) { b.addEventListener("click", close); });
+  gs.addEventListener("click", function (e) { if (e.target === gs) close(); });
+  Signup.wire(form);
+  if (location.hash === "#get-started") open();
+  return { open: open, close: close };
+})();
 
 
 // ---------- Founding member pop-up ----------
@@ -1212,6 +1353,7 @@ document.querySelectorAll('form.signup:not([data-source="founding-popup"])').for
 
   function open() {
     if (isOpen) return;
+    if (!document.getElementById("gs").hidden) return; // don't interrupt someone filling out Get started
     isOpen = true;
     clearTimeout(timer);
     if (io) io.disconnect();
